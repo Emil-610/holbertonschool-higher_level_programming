@@ -8,7 +8,7 @@ if number >= 0:
     last = (number % 10)
 else:
     last = -1 * ((-1 * number) % 10)
-print(f"Last digit of {number} is {last} and is " , end = "")
+print(f"Last digit of {number} is {last} and is ", end="")
 if last > 5:
     print("greater than 5")
 elif last == 0:
