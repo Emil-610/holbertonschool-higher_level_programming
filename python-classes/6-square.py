@@ -10,7 +10,7 @@ class Square:
 
         Args:
             size (int): side length (default 0)
-            position (tuple): (horizontal_offset, vertical_offset) (default (0, 0))
+            position (tuple): (horizontal, vertical) offsets (default (0, 0))
         """
         self.size = size
         self.position = position
@@ -36,14 +36,14 @@ class Square:
 
     @position.setter
     def position(self, value):
-        """Set the position (setter) with validation.
-
-        position must be a tuple of 2 positive integers (>= 0).
-        """
-        if (not isinstance(value, tuple) or
-                len(value) != 2 or
-                not all(isinstance(n, int) for n in value) or
-                not all(n >= 0 for n in value)):
+        """Set the position (setter) with validation."""
+        if not isinstance(value, tuple):
+            raise TypeError("position must be a tuple of 2 positive integers")
+        if len(value) != 2:
+            raise TypeError("position must be a tuple of 2 positive integers")
+        if not all(isinstance(n, int) for n in value):
+            raise TypeError("position must be a tuple of 2 positive integers")
+        if not all(n >= 0 for n in value):
             raise TypeError("position must be a tuple of 2 positive integers")
         self.__position = value
 
@@ -52,12 +52,7 @@ class Square:
         return self.__size * self.__size
 
     def my_print(self):
-        """Print the square using the '#' character.
-
-        Prints vertical offset (position[1]) as blank lines first.
-        Each printed line is prefixed by position[0] spaces.
-        If size is 0, prints a single empty line.
-        """
+        """Print the square using the '#' character."""
         if self.__size == 0:
             print()
             return
