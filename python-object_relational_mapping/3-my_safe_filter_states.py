@@ -1,27 +1,22 @@
 #!/usr/bin/python3
-"""Module for Selecting states where name equals argument(safe)"""
+"""Displays states matching the name argument, safe from SQL injection."""
+import sys
 
-if __name__ == '__main__':
-    from sys import argv
-    import MySQLdb
+import MySQLdb
 
-    db = MySQLdb.connect(
-        user=argv[1],
-        password=argv[2],
-        database=argv[3]
-    )
 
-    cursor = db.cursor()
+def my_safe_filter_states(username, password, db_name, state_name):
+    """Print the states whose name matches state_name, ordered by id."""
+    db = MySQLdb.connect(host="localhost", port=3306, user=username,
+                         passwd=password, db=db_name, charset="utf8")
+    cur = db.cursor()
+    cur.execute("SELECT * FROM states WHERE name = %s ORDER BY id ASC",
+                (state_name,))
+    for row in cur.fetchall():
+        print(row)
+    cur.close()
+    db.close()
 
-    cursor.execute("SELECT * \
-                    FROM `states` \
-                    ORDER BY id")
 
-    for state in cursor.fetchall():
-        if state[1] == argv[4]:
-            print(state)
-
-    if cursor:
-        cursor.close()
-    if db:
-        db.close()
+if __name__ == "__main__":
+    my_safe_filter_states(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
