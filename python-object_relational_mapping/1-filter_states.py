@@ -1,24 +1,22 @@
 #!/usr/bin/python3
-"""Module for Selecting states starting with N"""
+"""Lists all states with a name starting with N from the database."""
+import sys
 
-if __name__ == '__main__':
-    from sys import argv
-    import MySQLdb
+import MySQLdb
 
-    db = MySQLdb.connect(
-        user=argv[1],
-        password=argv[2],
-        database=argv[3]
-    )
-    cursor = db.cursor()
 
-    cursor.execute('SELECT * FROM states ORDER BY id')
+def filter_states(username, password, db_name):
+    """Print states whose name starts with an uppercase N, ordered by id."""
+    db = MySQLdb.connect(host="localhost", port=3306, user=username,
+                         passwd=password, db=db_name, charset="utf8")
+    cur = db.cursor()
+    cur.execute("SELECT * FROM states WHERE name LIKE BINARY 'N%' "
+                "ORDER BY id ASC")
+    for row in cur.fetchall():
+        print(row)
+    cur.close()
+    db.close()
 
-    for state in cursor.fetchall():
-        if state[1][0] == 'N':
-            print(state)
 
-    if cursor:
-        cursor.close()
-    if db:
-        db.close()
+if __name__ == "__main__":
+    filter_states(sys.argv[1], sys.argv[2], sys.argv[3])
