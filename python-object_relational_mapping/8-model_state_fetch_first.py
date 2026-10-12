@@ -1,36 +1,25 @@
 #!/usr/bin/python3
-"""
-Module for fetching first state from the database using SQLAlchemy ORM.
-"""
+"""Prints the first State object from the database hbtn_0e_6_usa."""
+import sys
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sys import argv
+from sqlalchemy.orm import Session
 
 from model_state import Base, State
 
-# Run only executed
-if __name__ == "__main__":
 
-    # Engine creation with mysql and mysqldb DBAPI
-    engine = create_engine("mysql+mysqldb://{}:{}@localhost:3306/{}"
-                           .format(argv[1], argv[2], argv[3]))
-
-    # Creating all classes in DB
-    Base.metadata.create_all(engine)
-
-    # Creating Session and its instance
-    Session = sessionmaker(bind=engine)
-    session = Session()
-
-    # The Query
+def fetch_first(username, password, db_name):
+    """Print the State with the lowest id, or Nothing if the table is empty."""
+    engine = create_engine("mysql+mysqldb://{}:{}@localhost:3306/{}".format(
+        username, password, db_name), pool_pre_ping=True)
+    session = Session(engine)
     state = session.query(State).order_by(State.id).first()
-
-    # Printing the result
     if state is None:
         print("Nothing")
     else:
-        print("1: {}".format(state.name))
+        print("{}: {}".format(state.id, state.name))
+    session.close()
 
-    # Closing the session
-    if session:
-        session.close()
+
+if __name__ == "__main__":
+    fetch_first(sys.argv[1], sys.argv[2], sys.argv[3])
