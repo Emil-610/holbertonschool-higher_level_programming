@@ -1,23 +1,21 @@
 #!/usr/bin/python3
-"""Module for Selecting states"""
+"""Lists all states from the database hbtn_0e_0_usa."""
+import sys
 
-if __name__ == '__main__':
-    from sys import argv
-    import MySQLdb
+import MySQLdb
 
-    db = MySQLdb.connect(
-        user=argv[1],
-        password=argv[2],
-        database=argv[3]
-    )
-    cursor = db.cursor()
 
-    cursor.execute('SELECT * FROM states')
+def list_states(username, password, db_name):
+    """Print all rows of the states table, sorted by states.id ascending."""
+    db = MySQLdb.connect(host="localhost", port=3306, user=username,
+                         passwd=password, db=db_name, charset="utf8")
+    cur = db.cursor()
+    cur.execute("SELECT * FROM states ORDER BY id ASC")
+    for row in cur.fetchall():
+        print(row)
+    cur.close()
+    db.close()
 
-    for state in cursor.fetchall():
-        print(state)
 
-    if cursor:
-        cursor.close()
-    if db:
-        db.close()
+if __name__ == "__main__":
+    list_states(sys.argv[1], sys.argv[2], sys.argv[3])
