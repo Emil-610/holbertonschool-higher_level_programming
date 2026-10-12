@@ -10,7 +10,7 @@ def my_filter_states(username, password, db_name, state_name):
     db = MySQLdb.connect(host="localhost", port=3306, user=username,
                          passwd=password, db=db_name, charset="utf8")
     cur = db.cursor()
-    cur.execute("SELECT * FROM states WHERE name = '{}' "
+    cur.execute("SELECT * FROM states WHERE name = BINARY '{}' "
                 "ORDER BY id ASC".format(state_name))
     for row in cur.fetchall():
         print(row)
